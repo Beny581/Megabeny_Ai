@@ -75,16 +75,16 @@ def chat():
     ]
 
     try:
-        response = openai.ChatCompletion.create(
+        response = openai.chat.completions.create(
             model="gpt-5",
             messages=messages
         )
-        reply = response['choices'][0]['message']['content']
+        reply = response.choices[0].message.content
     except Exception as e:
         reply = f"Error contacting OpenAI: {str(e)}"
 
     chat_history.append(("ai", reply))
-    return jsonify({"reply": reply, "voice": None})
+    return jsonify({"reply": reply, "voice": None}) 
 
 # Voice input route
 @app.route("/voice", methods=["POST"])
