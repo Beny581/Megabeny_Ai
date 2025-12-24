@@ -47,12 +47,31 @@ header{display:flex;justify-content:space-between;align-items:center;padding:12p
 <header>
   <div class="menu-toggle" onclick="toggleSidebar()">☰</div>
   <div class="logo">Megabeny AI Chart</div>
-  <div>
+
+  <div style="display:flex;align-items:center;gap:10px;">
     <span class="sub-icon" onclick="openSub()">💎</span>
     <span class="user-icon" onclick="toggleMode()">🌙</span>
-    <button onclick="loginGoogle()" style="margin-left:8px;padding:6px;border-radius:4px;">
-      Sign in Google
-    </button>
+
+    {% if user %}
+      {% if user.picture %}
+        <img src="{{ user.picture }}" alt="Profile"
+             style="width:32px;height:32px;border-radius:50%;">
+      {% endif %}
+
+      <span style="font-weight:600;">
+        {{ user.name }}
+      </span>
+
+      <button onclick="window.location='/logout'"
+              style="padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">
+        Logout
+      </button>
+    {% else %}
+      <button onclick="loginGoogle()"
+              style="padding:6px 10px;border-radius:6px;border:none;cursor:pointer;">
+        Sign in Google
+      </button>
+    {% endif %}
   </div>
 </header>
 
@@ -70,7 +89,7 @@ header{display:flex;justify-content:space-between;align-items:center;padding:12p
 <div class="container">
 
   <div class="chat-box" id="chatBox">
-    <div class="me8ssage ai">👋 Wellcome Megabeny AI Assistant</div>
+    <div class="me8ssage ai">👋 Welcome Megabeny AI Assistant</div>
   </div>
 
   <div class="input-area">

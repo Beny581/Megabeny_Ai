@@ -138,25 +138,37 @@ def login():
 @app.route("/login/callback")
 def callback():
     code = request.args.get("code")
+
     google_provider_cfg = requests.get(GOOGLE_DISCOVERY_URL).json()
     token_endpoint = google_provider_cfg["token_endpoint"]
+
     token_url, headers, body = client.prepare_token_request(
         token_endpoint,
         authorization_response=request.url,
         redirect_url=request.base_url,
         code=code
     )
+
     token_response = requests.post(
         token_url,
         headers=headers,
         data=body,
         auth=(GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET)
     )
+
     client.parse_request_body_response(token_response.text)
+
     userinfo_endpoint = google_provider_cfg["userinfo_endpoint"]
     uri, headers, body = client.add_token(userinfo_endpoint)
     userinfo_response = requests.get(uri, headers=headers, data=body).json()
-    session["user"] = {"name": userinfo_response["name"], "email": userinfo_response["email"]}
+
+    # HAPA NDIPO MUHIMU 👇
+    session["user"] = {
+        "name": userinfo_response.get("name"),
+        "email": userinfo_response.get("email"),
+        "picture": userinfo_response.get("picture")  # profile image
+    }
+
     return redirect("/")
 
 @app.route("/logout")
